@@ -19,11 +19,14 @@ app.use(express.json());
 const personRoutes = require('./routes/personRoutes')
 app.use('/person', personRoutes)
 
+
+
 //rota inicial / endpoint
 app.get("/", (req, res) => {
   //mostrar req
   res.json({ message: "Oi !!" });
 });
+
 
 //rQ2gc0sz8b735bm4
 //mongodb+srv://rafael:rQ2gc0sz8b735bm4@cluster0.hyg5kcl.mongodb.net/
@@ -39,3 +42,4 @@ mongoose
   })
   .catch((err) => console.log(err));
 
+  

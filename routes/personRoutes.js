@@ -7,7 +7,7 @@ router.post("/", async (req, res) => {
     //req.body
    
     //{name:"Rafael, salary: 5000, approved: false"}
-    const { name, salary, approved } = req.body;
+    const { name, salary, approved, modified } = req.body;
   
     if(!name){
       res.status(422).json({error:"o nome é obrigatorio"})
@@ -23,8 +23,9 @@ router.post("/", async (req, res) => {
     //create
     try {
       //Criando dados
+
       await Person.create(person);
-  
+      
       res.status(201).json({ message: "pessoa inserida com sucesso" });
     } catch (error) {
       res.status(500).json({ error: error });
@@ -104,5 +105,6 @@ router.delete("/:id", async(req,res) =>{
     res.status(500).json({error: error})
   }
 })
+
 
   module.exports = router
