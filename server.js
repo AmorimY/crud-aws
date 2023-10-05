@@ -2,7 +2,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 mongoose.set('strictQuery', false);
+const cors = require("cors")
 
+// inicia express
 const app = express();
 
 
@@ -12,13 +14,19 @@ app.use(
     extended: true,
   })
 );
-
+app.use(
+  cors({
+    origin:"*"
+  })
+)
 app.use(express.json());
 
 //rotas da API
 const personRoutes = require('./routes/personRoutes')
 app.use('/person', personRoutes)
 
+const noteRoutes = require('./routes/noteRoutes')
+app.use('/note',noteRoutes)
 
 
 //rota inicial / endpoint

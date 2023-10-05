@@ -1,34 +1,66 @@
-/*async function pessoas() {
-  const res = await fetch("http://localhost:2000/person");
-  return res;
-}
-pessoas()
-  .then((response) => response.json())
-  .then((data) => (data) );
-*/
-const pessoas = async () =>{
-    let url = "http://localhost:2000/person";
-    const res = await fetch(url);
-    //console.log(res)
-    const data = await res.json();
-    //console.log(data)
-    return data
-}
-async function mostra(){
-    const pessoa = await pessoas()
-    const date = pessoa[1].modified
-    const d = new Date(date)
+//const axios = require("axios");
+const url = "http://localhost:2000/note"; 
+
+const textInput = document.getElementById("conteudo")
+const envia = document.getElementById("envia")
+
+//const conteudo = textInput.value
+envia.addEventListener("click",() =>{
+    const conteudo = textInput.value;
     
-    console.log(diaHora(d))
-}
+    axios.post(url,{
+        content:conteudo
+    })
+    .then((res)=>console.log(res))
+})
 
-mostra()
+//axios post 
+// axios({
+    //     method: "post",
+    //     url: url,
+    //     data:{
+        //         _id: '650c79e59bdab9a0b8c564fb',
+//         content: 'teste axios',
+//         modified: '2023-09-21T14:14:13.396Z',
+//         __v: 0
+//     }
+// })
 
-function diaHora(date){
-    const ano = date.getFullYear()
-    const mes = date.toLocaleString('default', { month: 'long' });
-    const dia = date.getDate()
-    const hora = date.getHours()
-    const minuto = date.getMinutes()
-    return `${dia} de ${mes} de ${ano} ${hora}:${minuto}`
+axios.get(url)
+.then(data => {
+    console.log(data.data)
 }
+ )
+
+  
+  
+  
+  
+  /*
+  function diaHora(date){
+      const ano = date.getFullYear()
+      const mes = date.toLocaleString('default', { month: 'long' });
+      const dia = date.getDate()
+      const hora = date.getHours() + 3
+      const minuto = date.getMinutes()
+      return `${dia} de ${mes} de ${ano} ás ${hora}:${minuto}`
+    }
+
+// const notes = async () =>{
+//     let url = "http://localhost:2000/note";
+//     const res = await fetch(url);
+//     const data = await res.json();
+//     return data
+// }
+
+
+// async function mostra(){
+//     const note = await notes()
+//     const content = note
+//     const date = note[1].modified
+//     const UTCdate = new Date(date)
+//     console.log(content)
+
+// }
+
+*/

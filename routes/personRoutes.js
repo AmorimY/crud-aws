@@ -3,34 +3,43 @@ const router = require('express').Router()
 const Person = require("../models/Person");
 
 // Create-Criacao de dados
-router.post("/", async (req, res) => {
+router.post("/", (req, res) => {
     //req.body
    
     //{name:"Rafael, salary: 5000, approved: false"}
-    const { name, salary, approved, modified } = req.body;
+   // const { name, salary, approved} = req.body;
+    let newPerson = new Person({
+      name: req.body.name,
+      salary: req.body.salary,
+      approved: req.body.approved
+    })
+    // if(!name){
+    //   res.status(422).json({error:"o nome é obrigatorio"})
+    //   return
+    // }
   
-    if(!name){
-      res.status(422).json({error:"o nome é obrigatorio"})
-      return
-    }
-  
-    const person = {
-      name,
-      salary,
-      approved,
-    };
+    // const person = {
+    //   name,
+    //   salary,
+    //   approved,
+    // };
   
     //create
-    try {
       //Criando dados
 
-      await Person.create(person);
-      
-      res.status(201).json({ message: "pessoa inserida com sucesso" });
-    } catch (error) {
-      res.status(500).json({ error: error });
+      newPerson.save()
+      .then((result) => {
+        res.json({
+          sucess: true,
+          msg:"Pessoa adicionada",
+          result:{
+            _id: result._id,
+            name: result.name
+          }
+        })
+      })
     }
-  });
+  );
 
   //Read - leitura de dados
 router.get('/', async(req,res) =>{
@@ -100,7 +109,7 @@ router.delete("/:id", async(req,res) =>{
 
   try {
     await Person.deleteOne({_id:id})
-    res.status(200).json({message : "Usuário " + Person.name + " removido"})
+    res.status(200).json({data : person, message : "pessoa deletada com sucesso" })
   } catch (error) {
     res.status(500).json({error: error})
   }
