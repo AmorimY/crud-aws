@@ -3,27 +3,56 @@ const router = require('express').Router();
 const Note =  require("../models/Note");
 
 //create
-router.post("/", async (req,res) =>{
-    const {content} = req.body;
+router.post("/",(req,res) =>{
+    let content = req.body.content
 
     if(!content){
-        res.status(422).json({error: "Necessario conteúdo"})
-    };
-
-    const note = {
-        content,
-    };
-
-    try {
-        await Note.create(note);
-
-        res.status(201).json(
-            {data: note ,message: "nota inserida com sucesso"}
-            );
-    } catch (error) {
-        res.status(500).json({error:error});
+      return res.status(422).json({msg: "conteudo necessario"})
     }
-});
+    //req.body
+    let newNote = new Note({
+      content: req.body.content
+    })
+
+      newNote.save()
+      .then((result) => {
+        res.json({
+          sucess: true,
+          msg:"Nota adicionada",
+          result:{
+            _id: result._id,
+            content: result.content,
+            modified: result.modified
+          }
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({msg : err})
+      })
+    }
+  );
+
+// router.post("/", async (req,res) =>{
+//     const {content} = req.body;
+
+//     if(!content){
+//         res.status(422).json({error: "Necessario conteúdo"})
+//     };
+
+//     const note = {
+//         content,
+//     };
+
+//     try {
+//         await Note.create(note);
+
+//         res.status(201).json(
+//             {data: note ,message: "nota inserida com sucesso"}
+//             );
+//     } catch (error) {
+//         res.status(500).json({error:error});
+//     }
+// });
 //find
 router.get('/', async(req,res) =>{
     try {

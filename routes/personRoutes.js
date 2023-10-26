@@ -4,28 +4,18 @@ const Person = require("../models/Person");
 
 // Create-Criacao de dados
 router.post("/", (req, res) => {
+    let name = req.body.name
+
+    if(!name){
+      return res.status(422).json({msg: "nome necessario"})
+    }
     //req.body
-   
-    //{name:"Rafael, salary: 5000, approved: false"}
-   // const { name, salary, approved} = req.body;
     let newPerson = new Person({
       name: req.body.name,
       salary: req.body.salary,
       approved: req.body.approved
     })
-    // if(!name){
-    //   res.status(422).json({error:"o nome é obrigatorio"})
-    //   return
-    // }
-  
-    // const person = {
-    //   name,
-    //   salary,
-    //   approved,
-    // };
-  
-    //create
-      //Criando dados
+
 
       newPerson.save()
       .then((result) => {
@@ -37,6 +27,9 @@ router.post("/", (req, res) => {
             name: result.name
           }
         })
+      })
+      .catch((err) => {
+        res.status(500).json({msg : err})
       })
     }
   );
