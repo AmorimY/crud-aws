@@ -38,9 +38,7 @@ app.get("/", (req, res) => {
 });
 
 
-//rQ2gc0sz8b735bm4
-//mongodb+srv://rafael:rQ2gc0sz8b735bm4@cluster0.hyg5kcl.mongodb.net/
-//mongodb+srv://rafael:rQ2gc0sz8b735bm4>@cluster0.hyg5kcl.mongodb.net/?retryWrites=true&w=majority
+
 //entregar uma porta
 const DB_USER = process.env.DB_USER
 const DB_PASSWORD = process.env.DB_PASSWORD
