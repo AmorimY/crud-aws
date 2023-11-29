@@ -36,31 +36,3 @@ axios.get(url)
   
   
   
-  /*
-  function diaHora(date){
-      const ano = date.getFullYear()
-      const mes = date.toLocaleString('default', { month: 'long' });
-      const dia = date.getDate()
-      const hora = date.getHours() + 3
-      const minuto = date.getMinutes()
-      return `${dia} de ${mes} de ${ano} ás ${hora}:${minuto}`
-    }
-
-// const notes = async () =>{
-//     let url = "http://localhost:2000/note";
-//     const res = await fetch(url);
-//     const data = await res.json();
-//     return data
-// }
-
-
-// async function mostra(){
-//     const note = await notes()
-//     const content = note
-//     const date = note[1].modified
-//     const UTCdate = new Date(date)
-//     console.log(content)
-
-// }
-
-*/
