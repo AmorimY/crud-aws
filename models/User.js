@@ -4,7 +4,6 @@ const User =  mongoose.model('User',{
     name : String,
     email : String,
     password: String,
-    // passwordconfirm: String,
     created:{type: Date, default: () => Date.now() - 3*60*60*1000},
 })
 
