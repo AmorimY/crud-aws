@@ -1,6 +1,26 @@
 const router = require("express").Router();
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+
+function checkToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ msg: "Acesso negado" });
+  }
+  try {
+    const secret = process.env.SECRET;
+
+    const decoded = jwt.verify(token, secret);
+    req.user =  decoded
+    next();
+  } catch (error) {
+    res.status(400).json({ msg: "Acesso negado!" });
+  }
+}
 
 router.post("/register", async (req, res) => {
   let email = req.body.email;
@@ -48,17 +68,28 @@ router.post("/register", async (req, res) => {
     });
 });
 
-router.get('/profile/:id', async(req,res) =>{
-  const {id} = req.params.id
-
-  const user = await User.findOne(id, '-password')
-
-  if(!user){
-    return res.status(404).json({msg: "Usuario inexistente"})
+router.get("/profile/:id", checkToken, async (req, res) => {
+  const id = req.params.id;
+  const userIdToken = req.user.id;
+  if(id !== userIdToken){
+    return res.status(403).json({msg : "Acesso negado"})
   }
 
-  res.status(200).json({user})
-})
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ msg: "ID inválido!" });
+  }
+
+  try {
+    const user = await User.findById(id, "-password");
+
+    if (!user) {
+      return res.status(404).json({ msg: "Usuário não encontrado!" });
+    }
+    res.status(200).json({ user});
+  } catch (error) {
+    res.status(500).json({ msg: "Erro no servidor!" , error});
+  }
+});
 
 router.get("/", async (req, res) => {
   try {
@@ -83,19 +114,29 @@ router.get("/:name", async (req, res) => {
 router.post("/login", async (req, res) => {
   const name = req.body.name;
   const password = req.body.password;
+  const user = await User.findOne({ name: name });
+  if (!user) {
+    return res.status(404).json({ message: "Nenhum usuário encontrado" });
+  }
+  const userPassword = user.password;
+  const match = await bcrypt.compare(password, userPassword);
+  if (!match) {
+    return res.status(401).json({ messagem: "Senha incorreta" });
+  }
   try {
-    const user = await User.findOne({ name: name });
-    const userPassword = user.password;
-    const match = await bcrypt.compare(password, userPassword);
-    if (match == false) {
-      return res.status(401).json({ messagem: "Senha incorreta" });
-    }
-    if (!user) {
-      return res.status(404).json({ message: "Nenhum usuário encontrado" });
-    }
-    res.status(200).json({status: 200 , message: "Conectado" });
+    const secret = process.env.secret;
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      secret, {expiresIn : '1h'}
+    );
+    res
+      .status(200)
+      .json({message: "Conectado", token: token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error });
   }
 });
 
