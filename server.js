@@ -27,6 +27,9 @@ app.use(express.json());
 const userRoutes = require('./routes/userRoutes')
 app.use('/user', userRoutes)
 
+const entriesRoutes = require('./routes/entriesRoutes')
+app.use('/entries', entriesRoutes)
+
 const noteRoutes = require('./routes/noteRoutes')
 app.use('/note',noteRoutes)
 
