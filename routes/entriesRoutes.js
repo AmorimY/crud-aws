@@ -1,4 +1,6 @@
 const DiaryEntrie = require("../models/DiaryEntrie");
+const mongoose = require('mongoose')
+
 
 const router = require("express").Router();
 
@@ -22,6 +24,9 @@ router.post("/", async (req, res) => {
 
 router.get("/:userId", async (req, res) => {
     let userId = req.params.userId;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: 'ID inválido' });
+    }
     let entries = DiaryEntrie;
     entries.find({ userId: userId }, "-userId -__v" ).then((entries) => {
         res.status(200).json({
@@ -29,5 +34,21 @@ router.get("/:userId", async (req, res) => {
         });
     });
 });
+
+router.delete("/:id", async(req, res) => {{
+    let id = req.params.id
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'ID inválido' });
+    }
+    try {
+        const result = await DiaryEntrie.findByIdAndDelete({_id:id})
+        const isDeleted = result.$isDeleted()
+        res.status(200).json({message: result, IsDeleted: isDeleted})
+        
+    } catch (error) {
+        res.status(400).json({error: error})
+    }
+    
+}})
 
 module.exports = router;

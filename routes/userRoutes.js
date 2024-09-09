@@ -135,8 +135,8 @@ router.post("/login", async (req, res) => {
     res
       .status(200)
       .json({message: "Conectado", token: token });
-  } catch (error) {
-    res.status(500).json({ error: error });
+  } catch (err) {
+    res.status(500).json({ error: err });
   }
 });
 
